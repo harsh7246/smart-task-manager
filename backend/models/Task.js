@@ -1,0 +1,19 @@
+const mongoose = require("mongoose");
+
+const taskSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    title: { type: String, required: true, trim: true },
+    description: { type: String, trim: true, default: "" },
+    status: { type: String, enum: ["Pending", "Completed"], default: "Pending" },
+    priority: { type: String, enum: ["Low", "Medium", "High"], default: "Medium" },
+    category: { type: String, trim: true, default: "General" },
+    dueDate: { type: Date, default: null },
+    aiSubtasks: [{ type: String }],
+  },
+  { timestamps: true }
+);
+
+taskSchema.index({ title: "text", description: "text", category: "text" });
+
+module.exports = mongoose.model("Task", taskSchema);
